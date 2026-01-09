@@ -10,7 +10,9 @@ public class Board {
         this.board = new int[9][9];
     }
 
+    public void generateBoard(){
 
+    }
 
     @Override
     public String toString() {
