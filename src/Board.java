@@ -123,7 +123,7 @@ public class Board {
         blockTracker.get(blockNumber).remove(Integer.valueOf(board[i][j]));
         board[i][j] = 0;
         if(j == 8){
-            usedNumbers.get(i+1).get(0).clear();
+            usedNumbers.get(i+1).getFirst().clear();
         }else{
             usedNumbers.get(i).get(j + 1).clear();
         }
