@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-//class for the Sudoku board
+//class containing the logic of the sudoku board
 public class Board {
     int[][] board;
     //randomizer for number generation
