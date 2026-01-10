@@ -49,7 +49,7 @@ public class Board {
                     if(j == 0){
                         board[i][j] = 0;
                         i--;
-                        j = 6;
+                        j = 7;
                         backTrack(i, j + 1);
                     }else{
                         board[i][j] = 0;
@@ -113,7 +113,7 @@ public class Board {
     private void backTrack(int i, int j){
         //checks which block the current cell is in
         int blockNumber = checkBlock(i, j);
-
+        System.out.println(i + " " + j);
         //since we're rolling back, then the current number in this cell doesn't work, so add it to the list of used numbers
         usedNumbers.get(i).get(j).add(board[i][j]);
 
@@ -122,7 +122,11 @@ public class Board {
         rowTracker.get(i).remove(Integer.valueOf(board[i][j]));
         blockTracker.get(blockNumber).remove(Integer.valueOf(board[i][j]));
         board[i][j] = 0;
-        usedNumbers.get(i).get(j + 1).clear();
+        if(j == 8){
+            usedNumbers.get(i+1).get(0).clear();
+        }else{
+            usedNumbers.get(i).get(j + 1).clear();
+        }
     }
 
     /**
@@ -160,6 +164,16 @@ public class Board {
             }
         }
         return -1;
+    }
+
+    /**
+     * Returns the int value of the element at specified cell
+     * @param i row index
+     * @param j col index
+     * @return integer containing the value in the cell
+     */
+    public int valueOf(int i, int j){
+        return board[i][j];
     }
 
     /**
