@@ -113,7 +113,6 @@ public class Board {
     private void backTrack(int i, int j){
         //checks which block the current cell is in
         int blockNumber = checkBlock(i, j);
-        System.out.println(i + " " + j);
         //since we're rolling back, then the current number in this cell doesn't work, so add it to the list of used numbers
         usedNumbers.get(i).get(j).add(board[i][j]);
 
