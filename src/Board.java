@@ -33,6 +33,7 @@ public class Board {
         }
         generateBoard();
         solution = board.clone();
+        generateBlanks();
     }
 
     /**
@@ -130,16 +131,25 @@ public class Board {
     }
 
     private int checkSolutions(){
-        int solutions = 0;
+        int totSolutions = 0;
         for(int i = 0; i < 9; i++){
             for(int j = 0; j < 9; j++){
+                int curSolutions = 0;
+                int block = checkBlock(i, j);
                 if(board[i][j] == 0){
-
+                    for(int k = 1; k < 10; k++){
+                        if(!rowTracker.get(i).contains(k) && !columnTracker.get(j).contains(k) && !blockTracker.get(block).contains(k)){
+                            curSolutions++;
+                            if(curSolutions > totSolutions){
+                                totSolutions = curSolutions;
+                            }
+                        }
+                    }
                 }
             }
         }
 
-        return solutions;
+        return totSolutions;
     }
 
     /**
