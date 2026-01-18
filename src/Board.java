@@ -110,22 +110,45 @@ public class Board {
     }
 
     private void generateBlanks(){
-        for(int i = 0; i < 9; i++){
-            for(int j = 0; j < 9; j++){
-                int block = checkBlock(i, j);
-                int temp = board[i][j];
+        int[][] boardCoords = new int[81][2];
+        int x = 0;
+        int y = 0;
+        for(int i = 0; i < 81; i++){
+            boardCoords[i][0] = x;
+            boardCoords[i][1] = y;
+            y++;
+            if(y == 9){
+                y = 0;
+                x++;
+            }
+        }
 
-                rowTracker.get(i).remove(Integer.valueOf(temp));
-                columnTracker.get(j).remove(Integer.valueOf(temp));
-                blockTracker.get(block).remove(Integer.valueOf(temp));
+        for(int k = boardCoords.length - 1; k > 0; k--){
+            int randVal = rand.nextInt(k + 1);
+            int[] a = boardCoords[randVal];
+            boardCoords[randVal] = boardCoords[k];
+            boardCoords[k] = a;
+        }
 
-                board[i][j] = 0;
-                if(checkSolutions() == 0 || checkSolutions() > 1){
-                    board[i][j] = temp;
-                    rowTracker.get(i).add(temp);
-                    columnTracker.get(j).add(temp);
-                    blockTracker.get(block).add(temp);
-                }
+
+        for(int k = 0; k < boardCoords.length; k++){
+            int i = boardCoords[k][0];
+            int j = boardCoords[k][1];
+            System.out.println(i + " " + j);
+
+            int block = checkBlock(i, j);
+            int temp = board[i][j];
+
+            rowTracker.get(i).remove(Integer.valueOf(temp));
+            columnTracker.get(j).remove(Integer.valueOf(temp));
+            blockTracker.get(block).remove(Integer.valueOf(temp));
+
+            board[i][j] = 0;
+            if(checkSolutions() == 0 || checkSolutions() > 1){
+                board[i][j] = temp;
+                rowTracker.get(i).add(temp);
+                columnTracker.get(j).add(temp);
+                blockTracker.get(block).add(temp);
             }
         }
     }
@@ -212,8 +235,8 @@ public class Board {
         return -1;
     }
 
-    public int[][] getBoard(){
-        return board.clone();
+    public void changeValue(int i, int j, int value){
+        board[i][j] = value;
     }
 
     /**

@@ -1,17 +1,21 @@
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Graphic {
+public class Graphic implements ActionListener {
     JFrame frame;
     JPanel panel1;
     JPanel panel2;
     JPanel panel3;
     JPanel panel4;
     JPanel panel5;
+    JButton[][] cells = new JButton[9][9];
+    int[][] selected = {{-1,-1}};
 
+    Color LIGHT_BLUE = new Color(156,224,255);
+    Color LIGHTER_BLUE = new Color(201,240,255);
     public Graphic(Board board) {
         //Initializes the JFrame
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -49,13 +53,11 @@ public class Graphic {
 
         JPanel panel3 = new JPanel();
 
-
-        JButton[][] cells = new JButton[9][9];
-
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 if(board.valueOf(i, j) == 0) {
                     cells[i][j] = new JButton("");
+                    cells[i][j].addActionListener(this);
                 }else{
                     cells[i][j] = new JButton(Integer.toString(board.valueOf(i, j)));
                 }
@@ -112,4 +114,19 @@ public class Graphic {
 
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        for(int i = 0; i < 9; i++) {
+            for(int j = 0; j < 9; j++) {
+                if (cells[i][j].getModel().isRollover()) {
+                    if(selected[0][0] != -1 && selected[0][1] != -1){
+                        cells[selected[0][0]][selected[0][1]].setBackground(Color.WHITE);
+                    }
+                    cells[i][j].setBackground(LIGHT_BLUE);
+                    selected[0][0] = i;
+                    selected[0][1] = j;
+                }
+            }
+        }
+    }
 }
