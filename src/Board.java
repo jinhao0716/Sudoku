@@ -21,6 +21,7 @@ public class Board {
      */
     public Board(){
         this.board = new int[9][9];
+        this.solution = new int[9][9];
 
         for(int i = 0; i < 9; i++){
             usedNumbers.add(new ArrayList<>());
@@ -32,7 +33,11 @@ public class Board {
             }
         }
         generateBoard();
-        solution = board.clone();
+        for(int i = 0; i < 9; i++){
+            for(int j = 0; j < 9; j++){
+                solution[i][j] = valueOf(i, j);
+            }
+        }
         generateBlanks();
     }
 
@@ -237,6 +242,17 @@ public class Board {
 
     public void changeValue(int i, int j, int value){
         board[i][j] = value;
+    }
+
+    public boolean checkVictory(){
+        for(int i = 0; i < 9; i++){
+            for(int j = 0; j < 9; j++){
+                if(board[i][j] != solution[i][j]){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
