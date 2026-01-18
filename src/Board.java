@@ -6,6 +6,7 @@ import java.util.Random;
 //class containing the logic of the sudoku board
 public class Board {
     int[][] board;
+    int[][] solution;
     //randomizer for number generation
     final Random rand = new Random();
     //Hashmaps for keeping track which numbers have been used in each column, row, or block
@@ -31,6 +32,7 @@ public class Board {
             }
         }
         generateBoard();
+        solution = board.clone();
     }
 
     /**
@@ -61,8 +63,9 @@ public class Board {
                 }
             }
         }
-
     }
+
+
 
     /**
      * Function for generating a number for specified cell in the board
@@ -103,6 +106,40 @@ public class Board {
         }
         //if the function reached here, then no valid number exists for the current cell, return -1
         return -1;
+    }
+
+    private void generateBlanks(){
+        for(int i = 0; i < 9; i++){
+            for(int j = 0; j < 9; j++){
+                int block = checkBlock(i, j);
+                int temp = board[i][j];
+
+                rowTracker.get(i).remove(Integer.valueOf(temp));
+                columnTracker.get(j).remove(Integer.valueOf(temp));
+                blockTracker.get(block).remove(Integer.valueOf(temp));
+
+                board[i][j] = 0;
+                if(checkSolutions() == 0 || checkSolutions() > 1){
+                    board[i][j] = temp;
+                    rowTracker.get(i).add(temp);
+                    columnTracker.get(j).add(temp);
+                    blockTracker.get(block).add(temp);
+                }
+            }
+        }
+    }
+
+    private int checkSolutions(){
+        int solutions = 0;
+        for(int i = 0; i < 9; i++){
+            for(int j = 0; j < 9; j++){
+                if(board[i][j] == 0){
+
+                }
+            }
+        }
+
+        return solutions;
     }
 
     /**
@@ -163,6 +200,10 @@ public class Board {
             }
         }
         return -1;
+    }
+
+    public int[][] getBoard(){
+        return board.clone();
     }
 
     /**

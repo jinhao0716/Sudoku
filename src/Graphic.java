@@ -13,10 +13,10 @@ public class Graphic {
     JPanel panel5;
 
     public Graphic(Board board) {
-        /*
-        Initializes the JFrame, sets window size to 2000x1000
-         */
+        //Initializes the JFrame
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        int width = (int) screen.getWidth();
+        int height = (int) screen.getHeight();
         frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setMinimumSize(screen);
@@ -25,7 +25,7 @@ public class Graphic {
         /*
         Sets the JFrame layout to BorderLayout and names the window
          */
-        frame.setLayout(new BorderLayout(720, 250));
+        frame.setLayout(new BorderLayout((int)(width/2.7), (int)(height/3.5)));
         frame.setTitle("Sudoku");
         frame.pack();
 
@@ -54,8 +54,12 @@ public class Graphic {
 
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
-                cells[i][j] = new JButton(Integer.toString(board.valueOf(i, j)));
-                cells[i][j].setFont(new Font("Arial", Font.PLAIN, 30));
+                if(board.valueOf(i, j) == 0) {
+                    cells[i][j] = new JButton("");
+                }else{
+                    cells[i][j] = new JButton(Integer.toString(board.valueOf(i, j)));
+                }
+                cells[i][j].setFont(new Font("Arial", Font.PLAIN, height/50));
                 cells[i][j].setUI(new BasicButtonUI());
                 cells[i][j].setOpaque(true);
                 cells[i][j].setBackground(Color.WHITE);
