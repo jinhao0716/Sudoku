@@ -152,12 +152,107 @@ public class Graphic implements ActionListener {
                     if (cells[i][j].getModel().isRollover()) {
                         if(selected[0][0] != -1 && selected[0][1] != -1){
                             cells[selected[0][0]][selected[0][1]].setBackground(Color.WHITE);
+                            uncolorCol();
+                            uncolorRow();
+                            uncolorGrid();
                         }
                         cells[i][j].setBackground(LIGHT_BLUE);
+                        colorCol(i, j);
+                        colorRow(i, j);
+                        colorGrid(i, j);
+
                         selected[0][0] = i;
                         selected[0][1] = j;
                     }
                 }
+            }
+        }
+    }
+
+    private void colorGrid(int i, int j){
+        int iPos = i % 3;
+        int jPos = j % 3;
+
+        if(iPos == 1 && jPos == 1){
+            cells[i - 1][j - 1].setBackground(LIGHTER_BLUE);
+            cells[i - 1][j].setBackground(LIGHTER_BLUE);
+            cells[i - 1][j + 1].setBackground(LIGHTER_BLUE);
+            cells[i + 1][j - 1].setBackground(LIGHTER_BLUE);
+            cells[i + 1][j].setBackground(LIGHTER_BLUE);
+            cells[i + 1][j + 1].setBackground(LIGHTER_BLUE);
+            cells[i][j - 1].setBackground(LIGHTER_BLUE);
+            cells[i][j + 1].setBackground(LIGHTER_BLUE);
+
+        }
+    }
+
+    private void uncolorGrid(){
+        int iPos = selected[0][0] % 3;
+        int jPos = selected[0][0] % 3;
+        int i = selected[0][0];
+        int j = selected[0][1];
+
+        if(iPos == 1 && jPos == 1){
+            cells[i - 1][j - 1].setBackground(Color.WHITE);
+            cells[i - 1][j].setBackground(Color.WHITE);
+            cells[i - 1][j + 1].setBackground(Color.WHITE);
+            cells[i + 1][j - 1].setBackground(Color.WHITE);
+            cells[i + 1][j].setBackground(Color.WHITE);
+            cells[i + 1][j + 1].setBackground(Color.WHITE);
+            cells[i][j - 1].setBackground(Color.WHITE);
+            cells[i][j + 1].setBackground(Color.WHITE);
+
+        }
+    }
+
+    private void uncolorRow(){
+        if(selected[0][1] != 0){
+            for(int k = selected[0][1] - 1; k >= 0; k--){
+                cells[selected[0][0]][k].setBackground(Color.WHITE);
+            }
+        }
+        if(selected[0][1] != 8){
+            for(int k = 8; k > selected[0][1]; k--){
+                cells[selected[0][0]][k].setBackground(Color.WHITE);
+            }
+        }
+    }
+
+    private void uncolorCol(){
+        if(selected[0][0] != 0){
+            for(int k = selected[0][0] - 1; k >= 0; k--){
+                cells[k][selected[0][1]].setBackground(Color.WHITE);
+            }
+        }
+        if(selected[0][0] != 8){
+            for(int k = 8; k > selected[0][0]; k--){
+                cells[k][selected[0][1]].setBackground(Color.WHITE);
+            }
+        }
+    }
+
+    private void colorRow(int i, int j){
+        if(j != 0){
+            for(int k = j - 1; k >= 0; k--){
+                cells[i][k].setBackground(LIGHTER_BLUE);
+            }
+        }
+        if(j != 8){
+            for(int k = 8; k > j; k--){
+                cells[i][k].setBackground(LIGHTER_BLUE);
+            }
+        }
+    }
+
+    private void colorCol(int i, int j){
+        if(i != 0){
+            for(int k = i - 1; k >= 0; k--){
+                cells[k][j].setBackground(LIGHTER_BLUE);
+            }
+        }
+        if(i != 8){
+            for(int k = 8; k > i; k--){
+                cells[k][j].setBackground(LIGHTER_BLUE);
             }
         }
     }
