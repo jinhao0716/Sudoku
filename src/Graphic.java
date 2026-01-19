@@ -7,19 +7,27 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
 public class Graphic implements ActionListener {
+
+    //global variables
+    //Jframes and panels
     JFrame frame;
     JPanel panel1;
     JPanel panel2;
     JPanel panel3;
     JPanel panel4;
     JPanel panel5;
+
+    //sudoku game board class
     Board board;
+
     JButton[][] cells = new JButton[9][9];
     JButton[] addButton = new JButton[9];
     int[][] selected = {{-1,-1}};
 
+    //colors
     Color LIGHT_BLUE = new Color(156,224,255);
     Color LIGHTER_BLUE = new Color(201,240,255);
+
     public Graphic(Board board) {
         this.board = board;
 
@@ -68,7 +76,7 @@ public class Graphic implements ActionListener {
                 }else{
                     cells[i][j] = new JButton(Integer.toString(board.valueOf(i, j)));
                 }
-                cells[i][j].setFont(new Font("Arial", Font.PLAIN, height/50));
+                cells[i][j].setFont(new Font("Arial", Font.BOLD, height/50));
                 cells[i][j].setUI(new BasicButtonUI());
                 cells[i][j].setOpaque(true);
                 cells[i][j].setBackground(Color.WHITE);
@@ -173,35 +181,156 @@ public class Graphic implements ActionListener {
         int iPos = i % 3;
         int jPos = j % 3;
 
+        //for when center of grid is clicked
         if(iPos == 1 && jPos == 1){
             cells[i - 1][j - 1].setBackground(LIGHTER_BLUE);
-            cells[i - 1][j].setBackground(LIGHTER_BLUE);
             cells[i - 1][j + 1].setBackground(LIGHTER_BLUE);
             cells[i + 1][j - 1].setBackground(LIGHTER_BLUE);
-            cells[i + 1][j].setBackground(LIGHTER_BLUE);
             cells[i + 1][j + 1].setBackground(LIGHTER_BLUE);
-            cells[i][j - 1].setBackground(LIGHTER_BLUE);
-            cells[i][j + 1].setBackground(LIGHTER_BLUE);
+        }
 
+        //for when top left of grid is clicked
+        if(iPos == 0 && jPos == 0){
+            cells[i + 1][j + 1].setBackground(LIGHTER_BLUE);
+            cells[i + 1][j + 2].setBackground(LIGHTER_BLUE);
+            cells[i + 2][j + 1].setBackground(LIGHTER_BLUE);
+            cells[i + 2][j + 2].setBackground(LIGHTER_BLUE);
+        }
+
+        //for when bottom right of grid is clicked
+        if(iPos == 2 && jPos == 2){
+            cells[i - 1][j - 1].setBackground(LIGHTER_BLUE);
+            cells[i - 1][j - 2].setBackground(LIGHTER_BLUE);
+            cells[i - 2][j - 1].setBackground(LIGHTER_BLUE);
+            cells[i - 2][j - 2].setBackground(LIGHTER_BLUE);
+        }
+
+        //for when top right of grid is clicked
+        if(iPos == 0 && jPos == 2){
+            cells[i + 1][j - 1].setBackground(LIGHTER_BLUE);
+            cells[i + 1][j - 2].setBackground(LIGHTER_BLUE);
+            cells[i + 2][j - 1].setBackground(LIGHTER_BLUE);
+            cells[i + 2][j - 2].setBackground(LIGHTER_BLUE);
+        }
+
+        //for when bottom left of grid is clicked
+        if(iPos == 2 && jPos == 0){
+            cells[i - 1][j + 1].setBackground(LIGHTER_BLUE);
+            cells[i - 1][j + 2].setBackground(LIGHTER_BLUE);
+            cells[i - 2][j + 1].setBackground(LIGHTER_BLUE);
+            cells[i - 2][j + 2].setBackground(LIGHTER_BLUE);
+        }
+
+        //for when top middle of grid is clicked
+        if(iPos == 0 && jPos == 1){
+            cells[i + 1][j - 1].setBackground(LIGHTER_BLUE);
+            cells[i + 1][j + 1].setBackground(LIGHTER_BLUE);
+            cells[i + 2][j - 1].setBackground(LIGHTER_BLUE);
+            cells[i + 2][j + 1].setBackground(LIGHTER_BLUE);
+        }
+
+        //for when the left middle of grid is clicked
+        if(iPos == 1 && jPos == 0){
+            cells[i - 1][j + 1].setBackground(LIGHTER_BLUE);
+            cells[i - 1][j + 2].setBackground(LIGHTER_BLUE);
+            cells[i + 1][j + 1].setBackground(LIGHTER_BLUE);
+            cells[i + 1][j + 2].setBackground(LIGHTER_BLUE);
+        }
+
+        //for when the right middle of grid is clicked
+        if(iPos == 1 && jPos == 2){
+            cells[i - 1][j - 1].setBackground(LIGHTER_BLUE);
+            cells[i - 1][j - 2].setBackground(LIGHTER_BLUE);
+            cells[i + 1][j - 1].setBackground(LIGHTER_BLUE);
+            cells[i + 1][j - 2].setBackground(LIGHTER_BLUE);
+        }
+
+        //for when the bottom middle of the grid is clicked
+        if(iPos == 2 && jPos == 1){
+            cells[i - 1][j - 1].setBackground(LIGHTER_BLUE);
+            cells[i - 2][j - 1].setBackground(LIGHTER_BLUE);
+            cells[i - 1][j + 1].setBackground(LIGHTER_BLUE);
+            cells[i - 2][j + 1].setBackground(LIGHTER_BLUE);
         }
     }
 
     private void uncolorGrid(){
         int iPos = selected[0][0] % 3;
-        int jPos = selected[0][0] % 3;
+        int jPos = selected[0][1] % 3;
         int i = selected[0][0];
         int j = selected[0][1];
 
+        //if previously clicked cell was the center of a grid
         if(iPos == 1 && jPos == 1){
             cells[i - 1][j - 1].setBackground(Color.WHITE);
-            cells[i - 1][j].setBackground(Color.WHITE);
             cells[i - 1][j + 1].setBackground(Color.WHITE);
             cells[i + 1][j - 1].setBackground(Color.WHITE);
-            cells[i + 1][j].setBackground(Color.WHITE);
             cells[i + 1][j + 1].setBackground(Color.WHITE);
-            cells[i][j - 1].setBackground(Color.WHITE);
-            cells[i][j + 1].setBackground(Color.WHITE);
 
+        }
+
+        //if previous clicked cell was the top left of a grid
+        if(iPos == 0 && jPos == 0){
+            cells[i + 1][j + 1].setBackground(Color.WHITE);
+            cells[i + 1][j + 2].setBackground(Color.WHITE);
+            cells[i + 2][j + 1].setBackground(Color.WHITE);
+            cells[i + 2][j + 2].setBackground(Color.WHITE);
+        }
+
+        //if previous clicked cell was the bottom right of a grid
+        if(iPos == 2 && jPos == 2){
+            cells[i - 1][j - 1].setBackground(Color.WHITE);
+            cells[i - 1][j - 2].setBackground(Color.WHITE);
+            cells[i - 2][j - 1].setBackground(Color.WHITE);
+            cells[i - 2][j - 2].setBackground(Color.WHITE);
+        }
+
+        //if previous clicked cell was the top right of a grid
+        if(iPos == 0 && jPos == 2){
+            cells[i + 1][j - 1].setBackground(Color.WHITE);
+            cells[i + 1][j - 2].setBackground(Color.WHITE);
+            cells[i + 2][j - 1].setBackground(Color.WHITE);
+            cells[i + 2][j - 2].setBackground(Color.WHITE);
+        }
+
+        //if previous clicked cell was the bottom left of a grid
+        if(iPos == 2 && jPos == 0){
+            cells[i - 1][j + 1].setBackground(Color.WHITE);
+            cells[i - 1][j + 2].setBackground(Color.WHITE);
+            cells[i - 2][j + 1].setBackground(Color.WHITE);
+            cells[i - 2][j + 2].setBackground(Color.WHITE);
+        }
+
+        //if previous clicked cell was the top middle of a grid
+        if(iPos == 0 && jPos == 1){
+            cells[i + 1][j - 1].setBackground(Color.WHITE);
+            cells[i + 1][j + 1].setBackground(Color.WHITE);
+            cells[i + 2][j - 1].setBackground(Color.WHITE);
+            cells[i + 2][j + 1].setBackground(Color.WHITE);
+        }
+
+        //if previous clicked cell was the left middle of a grid
+        if(iPos == 1 && jPos == 0){
+            cells[i - 1][j + 1].setBackground(Color.WHITE);
+            cells[i - 1][j + 2].setBackground(Color.WHITE);
+            cells[i + 1][j + 1].setBackground(Color.WHITE);
+            cells[i + 1][j + 2].setBackground(Color.WHITE);
+        }
+
+        //if previous clicked cell was the right middle of a grid
+        if(iPos == 1 && jPos == 2){
+            cells[i - 1][j - 1].setBackground(Color.WHITE);
+            cells[i - 1][j - 2].setBackground(Color.WHITE);
+            cells[i + 1][j - 1].setBackground(Color.WHITE);
+            cells[i + 1][j - 2].setBackground(Color.WHITE);
+        }
+
+        //if previous clicked cell was the bottom middle of a grid
+        if(iPos == 2 && jPos == 1){
+            cells[i - 1][j - 1].setBackground(Color.WHITE);
+            cells[i - 2][j - 1].setBackground(Color.WHITE);
+            cells[i - 1][j + 1].setBackground(Color.WHITE);
+            cells[i - 2][j + 1].setBackground(Color.WHITE);
         }
     }
 
