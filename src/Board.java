@@ -209,7 +209,7 @@ public class Board {
      * @param j index j
      * @return The grid number of the indices, -1 if invalid indices
      */
-    private int checkBlock(int i, int j){
+    public int checkBlock(int i, int j){
         int tempI = Math.floorDiv(i, 3);
         int tempJ = Math.floorDiv(j, 3);
         if(tempI == 0){

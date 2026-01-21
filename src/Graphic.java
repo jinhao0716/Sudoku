@@ -466,8 +466,9 @@ public class Graphic implements ActionListener {
     private void clearColor(){
         for(int i = 0; i < 9; i++){
             for(int j = 0; j < 9; j++){
+                int curBlock = board.checkBlock(i, j);
                 if(cells[i][j].getBackground().equals(Color.RED)){
-                    if(i == selected[0][0] || j == selected[0][1]){
+                    if(i == selected[0][0] || j == selected[0][1] || curBlock == board.checkBlock(selected[0][0], selected[0][1])){
                         cells[i][j].setBackground(LIGHTER_BLUE);
                     }else{
                         cells[i][j].setBackground(Color.WHITE);
