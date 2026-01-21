@@ -1,5 +1,6 @@
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -139,7 +140,6 @@ public class Board {
         for(int k = 0; k < boardCoords.length; k++){
             int i = boardCoords[k][0];
             int j = boardCoords[k][1];
-            System.out.println(i + " " + j);
 
             int block = checkBlock(i, j);
             int temp = board[i][j];
@@ -241,6 +241,19 @@ public class Board {
     }
 
     public void changeValue(int i, int j, int value){
+        int blockNumber = checkBlock(i, j);
+
+        if(board[i][j] != 0){
+            rowTracker.get(i).remove(Integer.valueOf(board[i][j]));
+            columnTracker.get(j).remove(Integer.valueOf(board[i][j]));
+            blockTracker.get(blockNumber).remove(Integer.valueOf(board[i][j]));
+        }
+
+
+
+        rowTracker.get(i).add(value);
+        columnTracker.get(j).add(value);
+        blockTracker.get(blockNumber).add(value);
         board[i][j] = value;
     }
 
@@ -253,6 +266,50 @@ public class Board {
             }
         }
         return true;
+    }
+
+    public ArrayList<int[]> violatedCells(){
+        ArrayList<int[]> temp = new ArrayList<>();
+
+        for(int i = 0; i < 9; i++){
+            for(int j = 0; j < 9; j++){
+                int blockNumber = checkBlock(i, j);
+                int rowCount = Collections.frequency(rowTracker.get(i), board[i][j]);
+                int colCount = Collections.frequency(columnTracker.get(j), board[i][j]);
+                int blockCount = Collections.frequency(blockTracker.get(blockNumber), board[i][j]);
+                if(rowCount >= 2){
+                    for(int k = 0; k < 9; k++){
+                        if(board[i][k] == board[i][j]){
+                            temp.add(new int[]{i, k});
+                        }
+                    }
+                }
+                if(colCount >= 2){
+                    for(int k = 0; k < 9; k++){
+                        if(board[k][j] == board[i][j]){
+                            temp.add(new int[]{k, j});
+                        }
+                    }
+                }
+                if(blockCount >= 2){
+                    int gridI = i - (i % 3);
+                    int gridJ = j - (j % 3);
+                    for(int k = 0; k < 9; k++){
+                        if(board[gridI][gridJ] == board[i][j]){
+                            temp.add(new int[]{gridI, gridJ});
+                        }
+
+                        gridJ++;
+                        if(gridJ % 3 == 0){
+                            gridJ = j - (j % 3);
+                            gridI++;
+                        }
+                    }
+                }
+            }
+        }
+
+        return temp;
     }
 
     /**
