@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -23,7 +24,7 @@ public class Graphic implements ActionListener {
     Board board;
 
     JButton[][] cells = new JButton[9][9];
-    JButton[] addButton = new JButton[9];
+    JButton[] addButton = new JButton[10];
     int[][] selected = {{-1,-1}};
     boolean[][] placed = new boolean[9][9];
 
@@ -67,6 +68,8 @@ public class Graphic implements ActionListener {
 
         panel4 = new JPanel();
         panel4.setLayout(new BoxLayout(panel4, BoxLayout.X_AXIS));
+        JLabel title = new JLabel("SUDOKU");
+        panel4.add(title);
 
         panel5 = new JPanel();
         panel5.setLayout(new BoxLayout(panel5, BoxLayout.X_AXIS));
@@ -133,6 +136,16 @@ public class Graphic implements ActionListener {
             panel3.add(addButton[i]);
         }
 
+        JButton temp = new JButton();
+        temp.setVisible(false);
+        panel3.add(temp);
+        addButton[9] = new JButton("⌦");
+        addButton[9].setBackground(LIGHTER_BLUE);
+        addButton[9].setPreferredSize(new Dimension(width/40, height/40));
+        addButton[9].setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLUE));
+        addButton[9].addActionListener(this);
+        panel3.add(addButton[9]);
+
 
         frame.setResizable(false);
         frame.add(panel1, BorderLayout.CENTER);
@@ -148,10 +161,15 @@ public class Graphic implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         boolean add = false;
 
-        for(int i = 0; i < 9; i++) {
+        for(int i = 0; i < 10; i++) {
             if(addButton[i].getModel().isRollover()) {
                 add = true;
-                if(selected[0][0] != -1 && selected[0][1] != -1){
+                if(i == 9){
+                    cells[selected[0][0]][selected[0][1]].setText("");
+                    board.changeValue(selected[0][0], selected[0][1], 0);
+                    clearColor();
+                    colorWrong();
+                }else if(selected[0][0] != -1 && selected[0][1] != -1){
                     cells[selected[0][0]][selected[0][1]].setText(addButton[i].getText());
                     board.changeValue(selected[0][0], selected[0][1], Integer.parseInt(addButton[i].getText()));
 
@@ -196,7 +214,7 @@ public class Graphic implements ActionListener {
     }
 
     private void colorGrid(int i, int j){
-        int[] replaced = {-1, -1};
+        ArrayList<int[]> replaced = new ArrayList<>();
 
         int iPos = i % 3;
         int jPos = j % 3;
@@ -205,9 +223,7 @@ public class Graphic implements ActionListener {
         int gridJ = j - (j % 3);
         for(int k = 0; k < 9; k++){
             if(cells[gridI][gridJ].getBackground().equals(LIGHT_RED)){
-                replaced[0] = gridI;
-                replaced[1] = gridJ;
-                break;
+                replaced.add(new int[]{gridI, gridJ});
             }
 
             gridJ++;
@@ -289,13 +305,15 @@ public class Graphic implements ActionListener {
             cells[i - 2][j + 1].setBackground(LIGHTER_BLUE);
         }
 
-        if(replaced[0] != -1){
-            cells[replaced[0]][replaced[1]].setBackground(LIGHT_RED);
+        if(!replaced.isEmpty()){
+            for(int k = 0; k < replaced.size(); k++){
+                cells[replaced.get(k)[0]][replaced.get(k)[1]].setBackground(LIGHT_RED);
+            }
         }
     }
 
     private void uncolorGrid(){
-        int[] replaced = {-1, -1};
+        ArrayList<int[]> replaced = new ArrayList<>();
 
         int iPos = selected[0][0] % 3;
         int jPos = selected[0][1] % 3;
@@ -306,8 +324,7 @@ public class Graphic implements ActionListener {
         int gridJ = j - (j % 3);
         for(int k = 0; k < 9; k++){
             if(cells[gridI][gridJ].getBackground().equals(LIGHT_RED)){
-                replaced[0] = gridI;
-                replaced[1] = gridJ;
+                replaced.add(new int[]{gridI, gridJ});
             }
 
             gridJ++;
@@ -390,8 +407,10 @@ public class Graphic implements ActionListener {
             cells[i - 2][j + 1].setBackground(Color.WHITE);
         }
 
-        if(replaced[0] != -1){
-            cells[replaced[0]][replaced[1]].setBackground(LIGHT_RED);
+        if(!replaced.isEmpty()){
+            for(int k = 0; k < replaced.size(); k++){
+                cells[replaced.get(k)[0]][replaced.get(k)[1]].setBackground(LIGHT_RED);
+            }
         }
     }
 

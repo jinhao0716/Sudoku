@@ -249,11 +249,11 @@ public class Board {
             blockTracker.get(blockNumber).remove(Integer.valueOf(board[i][j]));
         }
 
-
-
-        rowTracker.get(i).add(value);
-        columnTracker.get(j).add(value);
-        blockTracker.get(blockNumber).add(value);
+        if(value != 0){
+            rowTracker.get(i).add(value);
+            columnTracker.get(j).add(value);
+            blockTracker.get(blockNumber).add(value);
+        }
         board[i][j] = value;
     }
 
