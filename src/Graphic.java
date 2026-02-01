@@ -9,7 +9,9 @@ import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Graphic implements ActionListener {
+import static java.awt.Font.BOLD;
+
+public class Graphic extends javax.swing.JFrame implements ActionListener {
 
     //global variables
     //Jframes and panels
@@ -33,7 +35,7 @@ public class Graphic implements ActionListener {
     Color LIGHTER_BLUE = new Color(201,240,255);
     Color LIGHT_RED = new Color(245, 130, 130);
 
-    public Graphic(Board board) {
+    public Graphic(Board board){
         this.board = board;
 
         //Initializes the JFrame
@@ -56,20 +58,33 @@ public class Graphic implements ActionListener {
         panel1 = new JPanel();
         panel1.setSize(new Dimension(frame.getWidth(), frame.getHeight()));
         panel1.setLayout(new GridLayout(9, 9));
-        panel1.setBorder(BorderFactory.createEmptyBorder((int)(height/4), (int)(width/2.9), (int)(height/4), (int)(width/12)));
+        panel1.setBorder(BorderFactory.createEmptyBorder((int)(height/7.8), (int)(width/3), (int)(height/5), (int)(width/16)));
 
         panel2 = new JPanel();
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
+        panel2.setBorder(BorderFactory.createEmptyBorder(0,width/40,0,0));
 
         panel3 = new JPanel();
         panel3.setLayout(new GridLayout(4, 3));
-        panel3.setBorder(BorderFactory.createEmptyBorder(height/3, width/10, height/3, width/10));
+        panel3.setBorder(BorderFactory.createEmptyBorder(height/4, width/10, height/3, width/11));
 
 
         panel4 = new JPanel();
-        panel4.setLayout(new BoxLayout(panel4, BoxLayout.X_AXIS));
+        panel4.setLayout(new GridLayout(1, 3));
+        panel4.setBorder(BorderFactory.createEmptyBorder(height/10,(int)(width/8.7),height/100,0));
+        JLabel placeholder1 = new JLabel("TEST");
+        placeholder1.setFont(new Font("Arial", BOLD, 30));
+        placeholder1.setVisible(false);
+        panel4.add(placeholder1);
+
         JLabel title = new JLabel("SUDOKU");
+        title.setFont(new Font("Times New Roman", BOLD, 80));
         panel4.add(title);
+
+        JLabel placeholder2 = new JLabel("TEST");
+        placeholder2.setFont(new Font("Arial", BOLD, 30));
+        placeholder2.setVisible(false);
+        panel4.add(placeholder2);
 
         panel5 = new JPanel();
         panel5.setLayout(new BoxLayout(panel5, BoxLayout.X_AXIS));
@@ -85,7 +100,7 @@ public class Graphic implements ActionListener {
                     placed[i][j] = false;
                     cells[i][j] = new JButton(Integer.toString(board.valueOf(i, j)));
                 }
-                cells[i][j].setFont(new Font("Arial", Font.BOLD, height/50));
+                cells[i][j].setFont(new Font("Arial", BOLD, height/50));
                 cells[i][j].setUI(new BasicButtonUI());
                 cells[i][j].setOpaque(true);
                 cells[i][j].setBackground(Color.WHITE);
