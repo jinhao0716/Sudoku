@@ -56,40 +56,55 @@ public class Graphic extends javax.swing.JFrame implements ActionListener {
         frame.setTitle("Sudoku");
         frame.pack();
 
-
+        //center
         panel1 = new JPanel();
         panel1.setSize(new Dimension(frame.getWidth(), frame.getHeight()));
         panel1.setLayout(new GridLayout(9, 9));
-        panel1.setBorder(BorderFactory.createEmptyBorder((int)(height/7.8), (int)(width/3), (int)(height/5), (int)(width/16)));
 
+        //left
         panel2 = new JPanel();
-        panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
-        panel2.setBorder(BorderFactory.createEmptyBorder(0,width/40,0,0));
+        panel2.setLayout(new GridLayout(1, 1));
+        JButton placeHolder3 = new JButton("Placeholder");
+        placeHolder3.setPreferredSize(new Dimension(width/3, height));
+        placeHolder3.setVisible(false);
+        panel2.add(placeHolder3);
 
+        //right
         panel3 = new JPanel();
         panel3.setLayout(new GridLayout(4, 3));
-        panel3.setBorder(BorderFactory.createEmptyBorder(height/4, width/10, height/3, width/11));
+        panel3.setPreferredSize(new Dimension(width/3, height));
+        panel3.setLayout(new GridLayout(4, 3, 1, 1));
+        panel3.setBorder(BorderFactory.createEmptyBorder((int)(panel3.getPreferredSize().getHeight()/12),(int)(panel3.getPreferredSize().getWidth()/4),(int)(panel3.getPreferredSize().getHeight()/12),(int)(panel3.getPreferredSize().getWidth()/4)));
 
 
+        //top
         panel4 = new JPanel();
         panel4.setLayout(new GridLayout(1, 3));
-        panel4.setBorder(BorderFactory.createEmptyBorder(height/10,(int)(width/8.7),height/100,0));
         JLabel placeholder1 = new JLabel("TEST");
         placeholder1.setFont(new Font("Arial", BOLD, 30));
+        placeholder1.setPreferredSize(new Dimension(width/3, (int)(height/3.5)));
         placeholder1.setVisible(false);
         panel4.add(placeholder1);
 
         JLabel title = new JLabel("SUDOKU");
-        title.setFont(new Font("Times New Roman", BOLD, 80));
+        title.setHorizontalAlignment(0);
+        title.setPreferredSize(new Dimension(width/3, height/4));
+        title.setFont(new Font("Times New Roman", BOLD, (int)(title.getPreferredSize().getHeight()/3)));
         panel4.add(title);
 
         JLabel placeholder2 = new JLabel("TEST");
         placeholder2.setFont(new Font("Arial", BOLD, 30));
+        placeholder2.setPreferredSize(new Dimension(width/4, height/4));
         placeholder2.setVisible(false);
         panel4.add(placeholder2);
 
+        //bottom
         panel5 = new JPanel();
-        panel5.setLayout(new BoxLayout(panel5, BoxLayout.X_AXIS));
+        panel5.setLayout(new GridLayout(1,1));
+        JButton placeHolder4 = new JButton("Placeholder");
+        placeHolder4.setPreferredSize(new Dimension(width, height/5));
+        placeHolder4.setVisible(false);
+        panel5.add(placeHolder4);
 
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
@@ -166,10 +181,10 @@ public class Graphic extends javax.swing.JFrame implements ActionListener {
 
         frame.setResizable(false);
         frame.add(panel1, BorderLayout.CENTER);
-        frame.add(panel2, BorderLayout.WEST);
-        frame.add(panel3, BorderLayout.EAST);
-        frame.add(panel4, BorderLayout.NORTH);
-        frame.add(panel5, BorderLayout.SOUTH);
+        frame.add(panel2, BorderLayout.LINE_START);
+        frame.add(panel3, BorderLayout.LINE_END);
+        frame.add(panel4, BorderLayout.PAGE_START);
+        frame.add(panel5, BorderLayout.PAGE_END);
         frame.setVisible(true);
 
     }
