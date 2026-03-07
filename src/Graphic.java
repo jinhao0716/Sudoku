@@ -30,6 +30,8 @@ public class Graphic extends javax.swing.JFrame implements ActionListener {
     int[][] selected = {{-1,-1}};
     boolean[][] placed = new boolean[9][9];
 
+    Image background = Toolkit.getDefaultToolkit().getImage("background1.jpg");
+
     //colors
     Color LIGHT_BLUE = new Color(156,200,255);
     Color LIGHTER_BLUE = new Color(201,240,255);

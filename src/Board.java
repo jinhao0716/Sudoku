@@ -1,8 +1,5 @@
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
 
 //class containing the logic of the sudoku board
 public class Board {
@@ -116,64 +113,92 @@ public class Board {
     }
 
     private void generateBlanks(){
-        int[][] boardCoords = new int[81][2];
-        int x = 0;
-        int y = 0;
-        for(int i = 0; i < 81; i++){
-            boardCoords[i][0] = x;
-            boardCoords[i][1] = y;
-            y++;
-            if(y == 9){
-                y = 0;
-                x++;
+        // Build a shuffled list of all 81 cell coordinates
+        ArrayList<int[]> cells = new ArrayList<>();
+        for(int i = 0; i < 9; i++){
+            for(int j = 0; j < 9; j++){
+                cells.add(new int[]{i, j});
             }
         }
+        Collections.shuffle(cells, rand);
 
-        for(int k = boardCoords.length - 1; k > 0; k--){
-            int randVal = rand.nextInt(k + 1);
-            int[] a = boardCoords[randVal];
-            boardCoords[randVal] = boardCoords[k];
-            boardCoords[k] = a;
-        }
+        // Attempt to blank each cell in shuffled order
+        for(int[] cell : cells){
+            int curI = cell[0];
+            int curJ = cell[1];
 
+            //removes the number in the current grid
+            int block = checkBlock(curI, curJ);
+            rowTracker.get(curI).remove(Integer.valueOf(board[curI][curJ]));
+            columnTracker.get(curJ).remove(Integer.valueOf(board[curI][curJ]));
+            blockTracker.get(block).remove(Integer.valueOf(board[curI][curJ]));
+            board[curI][curJ] = 0;
 
-        for(int k = 0; k < boardCoords.length; k++){
-            int i = boardCoords[k][0];
-            int j = boardCoords[k][1];
-
-            int block = checkBlock(i, j);
-            int temp = board[i][j];
-
-            rowTracker.get(i).remove(Integer.valueOf(temp));
-            columnTracker.get(j).remove(Integer.valueOf(temp));
-            blockTracker.get(block).remove(Integer.valueOf(temp));
-
-            board[i][j] = 0;
-            if(checkSolutions() == 0 || checkSolutions() > 1){
-                board[i][j] = temp;
-                rowTracker.get(i).add(temp);
-                columnTracker.get(j).add(temp);
-                blockTracker.get(block).add(temp);
+            //checks for number of solutions across the entire board
+            //if number of solutions is not exactly 1, this cell cannot be blank
+            if(checkSolutions() != 1){
+                board[curI][curJ] = solution[curI][curJ];
+                rowTracker.get(curI).add(board[curI][curJ]);
+                columnTracker.get(curJ).add(board[curI][curJ]);
+                blockTracker.get(block).add(board[curI][curJ]);
             }
         }
     }
 
+    /**
+     * Counts the number of solutions the current board state has.
+     * Uses recursive backtracking. Caps counting at 2 to avoid unnecessary work —
+     * we only care whether the answer is exactly 1.
+     * @return number of solutions found (capped at 2)
+     */
     private int checkSolutions(){
+        return checkSolutionsHelper(0, 0);
+    }
+
+    private int checkSolutionsHelper(int startI, int startJ){
+        // Find the next empty cell from the given starting position
+        int curI = startI;
+        int curJ = startJ;
+        while(curI < 9 && board[curI][curJ] != 0){
+            if(curJ == 8){
+                curJ = 0;
+                curI++;
+            }else{
+                curJ++;
+            }
+        }
+
+        // If no empty cell was found, we've reached a complete solution
+        if(curI == 9) return 1;
+
+        int block = checkBlock(curI, curJ);
         int totSolutions = 0;
-        for(int i = 0; i < 9; i++){
-            for(int j = 0; j < 9; j++){
-                int curSolutions = 0;
-                int block = checkBlock(i, j);
-                if(board[i][j] == 0){
-                    for(int k = 1; k < 10; k++){
-                        if(!rowTracker.get(i).contains(k) && !columnTracker.get(j).contains(k) && !blockTracker.get(block).contains(k)){
-                            curSolutions++;
-                            if(curSolutions > totSolutions){
-                                totSolutions = curSolutions;
-                            }
-                        }
-                    }
-                }
+
+        // Try each candidate number in this cell
+        for(int num = 1; num <= 9; num++){
+            if(!rowTracker.get(curI).contains(num)
+                    && !columnTracker.get(curJ).contains(num)
+                    && !blockTracker.get(block).contains(num)){
+
+                // Place the number temporarily
+                board[curI][curJ] = num;
+                rowTracker.get(curI).add(num);
+                columnTracker.get(curJ).add(num);
+                blockTracker.get(block).add(num);
+
+                // Recurse to fill the rest of the board
+                int nextJ = (curJ == 8) ? 0 : curJ + 1;
+                int nextI = (curJ == 8) ? curI + 1 : curI;
+                totSolutions += checkSolutionsHelper(nextI, nextJ);
+
+                // Remove the number (backtrack)
+                board[curI][curJ] = 0;
+                rowTracker.get(curI).remove(Integer.valueOf(num));
+                columnTracker.get(curJ).remove(Integer.valueOf(num));
+                blockTracker.get(block).remove(Integer.valueOf(num));
+
+                // Cap at 2: if we already found more than 1 solution, no need to keep searching
+                if(totSolutions > 1) return totSolutions;
             }
         }
 
