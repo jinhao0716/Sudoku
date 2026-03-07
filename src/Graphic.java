@@ -1,17 +1,19 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.sql.Array;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import static java.awt.Font.BOLD;
 
-public class Graphic extends javax.swing.JFrame implements ActionListener {
+public class Graphic extends javax.swing.JPanel implements ActionListener {
 
     //global variables
     //Jframes and panels
@@ -22,6 +24,8 @@ public class Graphic extends javax.swing.JFrame implements ActionListener {
     JPanel panel4;
     JPanel panel5;
 
+    final Random rand = new Random();
+
     //sudoku game board class
     Board board;
 
@@ -30,15 +34,33 @@ public class Graphic extends javax.swing.JFrame implements ActionListener {
     int[][] selected = {{-1,-1}};
     boolean[][] placed = new boolean[9][9];
 
-    Image background = Toolkit.getDefaultToolkit().getImage("background1.jpg");
-
     //colors
     Color LIGHT_BLUE = new Color(156,200,255);
     Color LIGHTER_BLUE = new Color(201,240,255);
     Color LIGHT_RED = new Color(245, 130, 130);
 
-    public Graphic(Board board){
+    public Graphic(Board board) throws IOException{
         this.board = board;
+
+        HashMap<Integer, String> backgroundList = new HashMap<>();
+
+        backgroundList.put(1,"background1.jpg");
+        backgroundList.put(2,"background2.jpg");
+        backgroundList.put(3,"background3.jpg");
+        backgroundList.put(4,"background4.jpg");
+        backgroundList.put(5,"background5.jpg");
+        backgroundList.put(6,"background6.jpg");
+        backgroundList.put(7,"background7.jpg");
+        backgroundList.put(8,"background8.jpg");
+        backgroundList.put(9,"background9.jpg");
+        backgroundList.put(10,"background10.jpg");
+
+        int max = 10;
+        int min = 1;
+        int randVal = rand.nextInt( max - min + 1) + min;
+        File f = new File(System.getProperty("user.dir") + "\\backgrounds\\" + backgroundList.get(randVal));
+        BufferedImage background = ImageIO.read(new File(f.getAbsolutePath()));
+
 
         //Initializes the JFrame
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -48,6 +70,9 @@ public class Graphic extends javax.swing.JFrame implements ActionListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setMinimumSize(screen);
         frame.setMaximumSize(screen);
+        Image newImage = background.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        JLabel backgroundLabel = new JLabel(new ImageIcon(newImage));
+        frame.setContentPane(backgroundLabel);
 
         /*
         Sets the JFrame layout to BorderLayout and names the window
@@ -90,6 +115,7 @@ public class Graphic extends javax.swing.JFrame implements ActionListener {
         title.setHorizontalAlignment(0);
         title.setPreferredSize(new Dimension(width/3, height/4));
         title.setFont(new Font("Times New Roman", BOLD, (int)(title.getPreferredSize().getHeight()/3)));
+        title.setForeground(Color.WHITE);
         panel4.add(title);
 
         JLabel placeholder2 = new JLabel("TEST");
@@ -185,6 +211,11 @@ public class Graphic extends javax.swing.JFrame implements ActionListener {
         frame.add(panel3, BorderLayout.LINE_END);
         frame.add(panel4, BorderLayout.PAGE_START);
         frame.add(panel5, BorderLayout.PAGE_END);
+        panel1.setOpaque(false);
+        panel2.setOpaque(false);
+        panel3.setOpaque(false);
+        panel4.setOpaque(false);
+        panel5.setOpaque(false);
         frame.setVisible(true);
 
     }
