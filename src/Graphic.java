@@ -61,7 +61,6 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
         File f = new File(System.getProperty("user.dir") + "\\backgrounds\\" + backgroundList.get(randVal));
         BufferedImage background = ImageIO.read(new File(f.getAbsolutePath()));
 
-
         //Initializes the JFrame
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         int width = (int) screen.getWidth();
@@ -189,7 +188,6 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
             addButton[i] = new JButton("" + (i + 1));
             addButton[i].setBackground(LIGHTER_BLUE);
             addButton[i].setPreferredSize(new Dimension(width/40, height/40));
-            addButton[i].setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLUE));
             addButton[i].addActionListener(this);
             panel3.add(addButton[i]);
         }
@@ -200,7 +198,6 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
         addButton[9] = new JButton("⌦");
         addButton[9].setBackground(LIGHTER_BLUE);
         addButton[9].setPreferredSize(new Dimension(width/40, height/40));
-        addButton[9].setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLUE));
         addButton[9].addActionListener(this);
         panel3.add(addButton[9]);
 
