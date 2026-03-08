@@ -24,14 +24,22 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
     JPanel panel4;
     JPanel panel5;
 
+    //randomizer for background images
     final Random rand = new Random();
 
-    //sudoku game board class
+    //Sudoku game board class
     Board board;
 
+    //holds each cell of the Sudoku board
     JButton[][] cells = new JButton[9][9];
+
+    //holds the array of buttons for changing numbers on the Sudoku board
     JButton[] addButton = new JButton[10];
+
+    //array for checking which cell on the board is currently highlighted
     int[][] selected = {{-1,-1}};
+
+    //stores numbers on the Sudoku board that are inputted by the user
     boolean[][] placed = new boolean[9][9];
 
     //colors
@@ -39,7 +47,7 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
     Color LIGHTER_BLUE = new Color(201,240,255);
     Color LIGHT_RED = new Color(245, 130, 130);
 
-    public Graphic(Board board) throws IOException{
+    public Graphic(Board board){
         this.board = board;
 
         HashMap<Integer, String> backgroundList = new HashMap<>();
@@ -55,23 +63,33 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
         backgroundList.put(9,"background9.jpg");
         backgroundList.put(10,"background10.jpg");
 
-        int max = 10;
-        int min = 1;
-        int randVal = rand.nextInt( max - min + 1) + min;
-        File f = new File(System.getProperty("user.dir") + "\\backgrounds\\" + backgroundList.get(randVal));
-        BufferedImage background = ImageIO.read(new File(f.getAbsolutePath()));
 
-        //Initializes the JFrame
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         int width = (int) screen.getWidth();
         int height = (int) screen.getHeight();
-        frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setMinimumSize(screen);
-        frame.setMaximumSize(screen);
-        Image newImage = background.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        JLabel backgroundLabel = new JLabel(new ImageIcon(newImage));
-        frame.setContentPane(backgroundLabel);
+
+        //try catch block for checking for IO exceptions
+        try{
+            //randomizes a number from 1 to 10 to determine which background image to use
+            int max = 10;
+            int min = 1;
+            int randVal = rand.nextInt( max - min + 1) + min;
+            File f = new File(System.getProperty("user.dir") + "\\backgrounds\\" + backgroundList.get(randVal));
+            BufferedImage background = ImageIO.read(new File(f.getAbsolutePath()));
+
+            //Initializes the JFrame
+            frame = new JFrame();
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setMinimumSize(screen);
+            frame.setMaximumSize(screen);
+            Image newImage = background.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            JLabel backgroundLabel = new JLabel(new ImageIcon(newImage));
+            frame.setContentPane(backgroundLabel);
+
+        }catch(IOException e){
+            System.out.println(e.getMessage());
+            System.exit(1);
+        }
 
         /*
         Sets the JFrame layout to BorderLayout and names the window
@@ -131,6 +149,7 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
         placeHolder4.setVisible(false);
         panel5.add(placeHolder4);
 
+        //creates a button for each cell of the Sudoku board
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 if(board.valueOf(i, j) == 0) {
@@ -184,6 +203,7 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
             }
         }
 
+        //creates a button for each possible input number
         for(int i = 0; i < 9; i++) {
             addButton[i] = new JButton("" + (i + 1));
             addButton[i].setBackground(LIGHTER_BLUE);
@@ -217,10 +237,15 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
 
     }
 
+    /**
+     * Checks which button was pressed and perform corresponding action
+     * @param e the event to be processed
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         boolean add = false;
 
+        //checks if the button that was pressed was one of the input buttons
         for(int i = 0; i < 10; i++) {
             if(addButton[i].getModel().isRollover()) {
                 add = true;
@@ -241,6 +266,8 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
                 }
             }
         }
+
+        //if it wasn't an input button, then it was a cell on the board, highlight the appropriate cells
         if(!add){
             for(int i = 0; i < 9; i++) {
                 for(int j = 0; j < 9; j++) {
@@ -264,6 +291,9 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Colors every cell of the board that has violated Sudoku properties red
+     */
     private void colorWrong(){
         ArrayList<int[]> temp = board.violatedCells();
         for(int k = 0; k < temp.size(); k++){
@@ -273,7 +303,13 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Colors the grid of the current clicked cell light blue
+     * @param i i position of the current cell
+     * @param j j position of the current cell
+     */
     private void colorGrid(int i, int j){
+        //ArrayList for recording which red cells were overwritten by light blue
         ArrayList<int[]> replaced = new ArrayList<>();
 
         int iPos = i % 3;
@@ -365,6 +401,7 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
             cells[i - 2][j + 1].setBackground(LIGHTER_BLUE);
         }
 
+        //restore the replaced red cells if there are any
         if(!replaced.isEmpty()){
             for(int k = 0; k < replaced.size(); k++){
                 cells[replaced.get(k)[0]][replaced.get(k)[1]].setBackground(LIGHT_RED);
@@ -372,7 +409,11 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Resets the grid color of the previous clicked cell back to white
+     */
     private void uncolorGrid(){
+        //code is largely the same as colorGrid except the cells are colored white instead
         ArrayList<int[]> replaced = new ArrayList<>();
 
         int iPos = selected[0][0] % 3;

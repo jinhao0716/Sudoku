@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.*;
 
 //class containing the logic of the sudoku board
