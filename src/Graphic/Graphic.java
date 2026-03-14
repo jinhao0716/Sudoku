@@ -1,6 +1,7 @@
 package Graphic;
 
 import Board.Board;
+import com.sun.tools.javac.Main;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -10,7 +11,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -74,12 +78,24 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
 
         //try catch block for checking for IO exceptions
         try{
-            //randomizes a number from 1 to 10 to determine which background image to use
             int max = 10;
             int min = 1;
-            int randVal = rand.nextInt( max - min + 1) + min;
-            File f = new File(System.getProperty("user.dir") + "\\src\\Graphic\\backgrounds\\" + backgroundList.get(randVal));
-            BufferedImage background = ImageIO.read(new File(f.getAbsolutePath()));
+            int randVal = rand.nextInt(max - min + 1) + min;
+
+            // First try loading from JAR resources (works when running from IntelliJ)
+            InputStream imgStream = getClass().getResourceAsStream("/Graphic/backgrounds/" + backgroundList.get(randVal));
+
+            // If not found, try the backgrounds folder next to the JAR (works for .exe)
+            if (imgStream == null) {
+                File f = new File(new File(Main.class.getProtectionDomain()
+                        .getCodeSource()
+                        .getLocation()
+                        .toURI())
+                        .getParentFile(), "backgrounds/" + backgroundList.get(randVal));
+                imgStream = new FileInputStream(f);
+            }
+
+            BufferedImage background = ImageIO.read(imgStream);
 
             //Initializes the JFrame
             frame = new JFrame();
@@ -93,6 +109,8 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
         }catch(IOException e){
             System.out.println(e.getMessage());
             System.exit(1);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
 
         /*

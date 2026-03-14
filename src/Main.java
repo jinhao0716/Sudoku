@@ -1,7 +1,9 @@
 import Board.Board;
 import Graphic.Graphic;
 
-void main() {
-    Board board = new Board();
-    new Graphic(board);
+public class Main {
+    public static void main(String[] args) {
+        Board board = new Board();
+        new Graphic(board);
+    }
 }
