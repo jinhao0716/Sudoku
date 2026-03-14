@@ -515,6 +515,9 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Resets the row color of the previous clicked cell back to white
+     */
     private void uncolorRow(){
         if(selected[0][1] != 0){
             for(int k = selected[0][1] - 1; k >= 0; k--){
@@ -531,6 +534,9 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Resets the column color of the previous clicked cell back to white
+     */
     private void uncolorCol(){
         if(selected[0][0] != 0){
             for(int k = selected[0][0] - 1; k >= 0; k--){
@@ -548,6 +554,11 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Colors the row of the currently clicked cell light blue
+     * @param i i position of the current cell
+     * @param j j position of the current cell
+     */
     private void colorRow(int i, int j){
         if(j != 0){
             for(int k = j - 1; k >= 0; k--){
@@ -565,6 +576,11 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Colors the column of the currently clicked cell light blue
+     * @param i i position of the current cell
+     * @param j j position of the current cell
+     */
     private void colorCol(int i, int j){
         if(i != 0){
             for(int k = i - 1; k >= 0; k--){
@@ -582,6 +598,9 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Removes every red highlighted cell on the board
+     */
     private void clearColor(){
         for(int i = 0; i < 9; i++){
             for(int j = 0; j < 9; j++){

@@ -196,7 +196,7 @@ public class Board {
                 columnTracker.get(curJ).remove(Integer.valueOf(num));
                 blockTracker.get(block).remove(Integer.valueOf(num));
 
-                // Cap at 2: if we already found more than 1 solution, no need to keep searching
+                // Cap at 2, if we already found more than 1 solution, no need to keep searching
                 if(totSolutions > 1) return totSolutions;
             }
         }
@@ -264,6 +264,12 @@ public class Board {
         return -1;
     }
 
+    /**
+     * Function for changing the value of a cell
+     * @param i i position of the cell
+     * @param j j position of the cell
+     * @param value value to change cell to
+     */
     public void changeValue(int i, int j, int value){
         int blockNumber = checkBlock(i, j);
 
@@ -281,6 +287,10 @@ public class Board {
         board[i][j] = value;
     }
 
+    /**
+     * Checks if the board is solved
+     * @return True if yes, false otherwise
+     */
     public boolean checkVictory(){
         for(int i = 0; i < 9; i++){
             for(int j = 0; j < 9; j++){
@@ -292,6 +302,10 @@ public class Board {
         return true;
     }
 
+    /**
+     * Returns an ArrayList containing cells that have broken Sudoku rules
+     * @return int array ArrayList containing i and j positions of every cell that broke Sudoku rules
+     */
     public ArrayList<int[]> violatedCells(){
         ArrayList<int[]> temp = new ArrayList<>();
 
