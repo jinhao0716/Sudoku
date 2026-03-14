@@ -1,3 +1,5 @@
+package Board;
+
 import java.util.*;
 
 //class containing the logic of the sudoku board

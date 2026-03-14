@@ -1,3 +1,7 @@
+package Graphic;
+
+import Board.Board;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
@@ -74,7 +78,7 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
             int max = 10;
             int min = 1;
             int randVal = rand.nextInt( max - min + 1) + min;
-            File f = new File(System.getProperty("user.dir") + "\\backgrounds\\" + backgroundList.get(randVal));
+            File f = new File(System.getProperty("user.dir") + "\\src\\Graphic\\backgrounds\\" + backgroundList.get(randVal));
             BufferedImage background = ImageIO.read(new File(f.getAbsolutePath()));
 
             //Initializes the JFrame
