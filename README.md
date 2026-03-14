@@ -1,5 +1,6 @@
 # Information
 By: Jin Hao Fan
+
 Email: jhfan0716@gmail.com
 
 A classic Sudoku game built in Java with a graphical interface.
