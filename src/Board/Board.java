@@ -19,6 +19,10 @@ public class Board {
      * constructor for board class
      */
     public Board(){
+        recreateBoard();
+    }
+
+    public void recreateBoard(){
         this.board = new int[9][9];
         this.solution = new int[9][9];
 
@@ -371,7 +375,7 @@ public class Board {
         String temp = "";
         for (int i = 0; i < 9; i++){
             for (int j = 0; j < 9; j++){
-                temp += board[i][j] + " ";
+                temp += solution[i][j] + " ";
             }
             temp.trim();
             temp += "\n";

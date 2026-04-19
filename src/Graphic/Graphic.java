@@ -9,6 +9,7 @@ import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,7 +40,7 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
     Board board;
 
     //holds each cell of the Sudoku board
-    JButton[][] cells = new JButton[9][9];
+    JButton[][] cells;
 
     //holds the array of buttons for changing numbers on the Sudoku board
     JButton[] addButton = new JButton[10];
@@ -50,6 +51,11 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
     //stores numbers on the Sudoku board that are inputted by the user
     boolean[][] placed = new boolean[9][9];
 
+    int width;
+    int height;
+
+    HashMap<Integer, String> backgroundList;
+
     //colors
     Color LIGHT_BLUE = new Color(156,200,255);
     Color LIGHTER_BLUE = new Color(201,240,255);
@@ -58,7 +64,7 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
     public Graphic(Board board){
         this.board = board;
 
-        HashMap<Integer, String> backgroundList = new HashMap<>();
+        backgroundList = new HashMap<>();
 
         backgroundList.put(1,"background1.jpg");
         backgroundList.put(2,"background2.jpg");
@@ -73,45 +79,14 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
 
 
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        int width = (int) screen.getWidth();
-        int height = (int) screen.getHeight();
+        width = (int) screen.getWidth();
+        height = (int) screen.getHeight();
 
-        //try catch block for checking for IO exceptions
-        try{
-            int max = 10;
-            int min = 1;
-            int randVal = rand.nextInt(max - min + 1) + min;
-
-            // First try loading from JAR resources (works when running from IntelliJ)
-            InputStream imgStream = getClass().getResourceAsStream("/Graphic/backgrounds/" + backgroundList.get(randVal));
-
-            // If not found, try the backgrounds folder next to the JAR (works for .exe)
-            if (imgStream == null) {
-                File f = new File(new File(Main.class.getProtectionDomain()
-                        .getCodeSource()
-                        .getLocation()
-                        .toURI())
-                        .getParentFile(), "backgrounds/" + backgroundList.get(randVal));
-                imgStream = new FileInputStream(f);
-            }
-
-            BufferedImage background = ImageIO.read(imgStream);
-
-            //Initializes the JFrame
-            frame = new JFrame();
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setMinimumSize(screen);
-            frame.setMaximumSize(screen);
-            Image newImage = background.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-            JLabel backgroundLabel = new JLabel(new ImageIcon(newImage));
-            frame.setContentPane(backgroundLabel);
-
-        }catch(IOException e){
-            System.out.println(e.getMessage());
-            System.exit(1);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
+        //Initializes the JFrame
+        frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setMinimumSize(screen);
+        frame.setMaximumSize(screen);
 
         /*
         Sets the JFrame layout to BorderLayout and names the window
@@ -171,6 +146,81 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
         placeHolder4.setVisible(false);
         panel5.add(placeHolder4);
 
+        matchBoard();
+
+        //creates a button for each possible input number
+        for(int i = 0; i < 9; i++) {
+            addButton[i] = new JButton("" + (i + 1));
+            addButton[i].setBackground(LIGHTER_BLUE);
+            addButton[i].setPreferredSize(new Dimension(width/40, height/40));
+            addButton[i].addActionListener(this);
+            panel3.add(addButton[i]);
+        }
+
+        JButton temp = new JButton();
+        temp.setVisible(false);
+        panel3.add(temp);
+        addButton[9] = new JButton("⌦");
+        addButton[9].setBackground(LIGHTER_BLUE);
+        addButton[9].setPreferredSize(new Dimension(width/40, height/40));
+        addButton[9].addActionListener(this);
+        panel3.add(addButton[9]);
+
+
+        frame.setResizable(false);
+        frame.setVisible(true);
+
+    }
+
+    private void matchBoard(){
+        //try catch block for checking for IO exceptions
+        try{
+            int max = 10;
+            int min = 1;
+            int randVal = rand.nextInt(max - min + 1) + min;
+
+            //first try loading from JAR resources
+            InputStream imgStream = getClass().getResourceAsStream("/Graphic/backgrounds/" + backgroundList.get(randVal));
+
+            //if not found, try the backgrounds folder next to the JAR
+            if (imgStream == null) {
+                File f = new File(new File(Main.class.getProtectionDomain()
+                        .getCodeSource()
+                        .getLocation()
+                        .toURI())
+                        .getParentFile(), "backgrounds/" + backgroundList.get(randVal));
+                imgStream = new FileInputStream(f);
+            }
+
+            BufferedImage background = ImageIO.read(imgStream);
+            Image newImage = background.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            JLabel backgroundLabel = new JLabel(new ImageIcon(newImage));
+            frame.setContentPane(backgroundLabel);
+
+        }catch(IOException e){
+            System.out.println(e.getMessage());
+            System.exit(1);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+
+        //reset layout and re-add all panels after setContentPane
+        frame.setLayout(new BorderLayout());
+        frame.add(panel1, BorderLayout.CENTER);
+        frame.add(panel2, BorderLayout.LINE_START);
+        frame.add(panel3, BorderLayout.LINE_END);
+        frame.add(panel4, BorderLayout.PAGE_START);
+        frame.add(panel5, BorderLayout.PAGE_END);
+        panel1.setOpaque(false);
+        panel2.setOpaque(false);
+        panel3.setOpaque(false);
+        panel4.setOpaque(false);
+        panel5.setOpaque(false);
+
+        panel1.removeAll();
+        panel1.repaint();
+
+        cells = new JButton[9][9];
         //creates a button for each cell of the Sudoku board
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
@@ -224,39 +274,8 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
                 panel1.add(cells[i][j]);
             }
         }
-
-        //creates a button for each possible input number
-        for(int i = 0; i < 9; i++) {
-            addButton[i] = new JButton("" + (i + 1));
-            addButton[i].setBackground(LIGHTER_BLUE);
-            addButton[i].setPreferredSize(new Dimension(width/40, height/40));
-            addButton[i].addActionListener(this);
-            panel3.add(addButton[i]);
-        }
-
-        JButton temp = new JButton();
-        temp.setVisible(false);
-        panel3.add(temp);
-        addButton[9] = new JButton("⌦");
-        addButton[9].setBackground(LIGHTER_BLUE);
-        addButton[9].setPreferredSize(new Dimension(width/40, height/40));
-        addButton[9].addActionListener(this);
-        panel3.add(addButton[9]);
-
-
-        frame.setResizable(false);
-        frame.add(panel1, BorderLayout.CENTER);
-        frame.add(panel2, BorderLayout.LINE_START);
-        frame.add(panel3, BorderLayout.LINE_END);
-        frame.add(panel4, BorderLayout.PAGE_START);
-        frame.add(panel5, BorderLayout.PAGE_END);
-        panel1.setOpaque(false);
-        panel2.setOpaque(false);
-        panel3.setOpaque(false);
-        panel4.setOpaque(false);
-        panel5.setOpaque(false);
-        frame.setVisible(true);
-
+        frame.revalidate();
+        frame.repaint();
     }
 
     /**
@@ -283,7 +302,29 @@ public class Graphic extends javax.swing.JPanel implements ActionListener {
                     clearColor();
                     colorWrong();
                     if(board.checkVictory()){
-                        JOptionPane.showMessageDialog(null, "You win!", "Congratulations!", JOptionPane.INFORMATION_MESSAGE);
+                        Object[] options = {"Yes", "No"};
+
+                        int result = JOptionPane.showOptionDialog(
+                                null,
+                                "You win! Do you want to start another game?",
+                                "Congratulations",
+                                JOptionPane.YES_NO_OPTION,
+                                JOptionPane.INFORMATION_MESSAGE,
+                                null,
+                                options,
+                                options[0]
+                        );
+
+                        if (result == JOptionPane.YES_OPTION) {
+                            //if yes was clicked, start a new game
+                            board.recreateBoard();
+                            matchBoard();
+                            repaint();
+                        } else if (result == JOptionPane.NO_OPTION || result == -1) {
+                            //if no was clicked, close the window and end the program
+                            frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+                            System.exit(0);
+                        }
                     }
                 }
             }
