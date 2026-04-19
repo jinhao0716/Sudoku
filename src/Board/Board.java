@@ -375,7 +375,7 @@ public class Board {
         String temp = "";
         for (int i = 0; i < 9; i++){
             for (int j = 0; j < 9; j++){
-                temp += solution[i][j] + " ";
+                temp += board[i][j] + " ";
             }
             temp.trim();
             temp += "\n";
